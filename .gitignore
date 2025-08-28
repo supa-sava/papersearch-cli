@@ -1,0 +1,10 @@
+# Environment files
+.env
+
+# IDE files
+.vscode/
+.idea/
+
+# Python virtual environments
+venv/
+.env/

@@ -1,73 +1,99 @@
+# 📚 Paper Search
 
+A beautiful CLI tool for searching academic papers across **OpenAlex** and **Web of Science**.
 
+## Quick Start
 
-# Academic Paper Mass Searcher
-
-A collection of Python scripts for searching and analyzing academic papers using the OpenAlex API.
-
-The intended usage cases are:
-1. Quickly mass-searching for abstracts of papers mentioning a particular term. The output is a CSV file with titles and abstracts that can be put into an LLM to filter out papers that don't fit your specific criteria.
-2. Finding all papers that cite a specific research paper, to explore the academic conversation around a given work and find related works that a particular paper you've read has influenced. Once again the output is a CSV file with titles and abstracts that can be put into an LLM to filter out papers or find most notable papers.
-
-
-## Getting Started
-
-Set up your Python environment:
 ```bash
+# Setup
 python -m venv venv
-source venv/bin/activate  # On Unix/macOS
-# or
-venv\Scripts\activate     # On Windows
-pip install requests
+venv\Scripts\activate          # Windows
+pip install requests python-dotenv rich questionary
+
+# Run
+python paper_search.py
 ```
 
-## Scripts Overview
+## Features
 
-### 1. `openalex_search_by_term.py`
-**Purpose**: Searches for academic papers containing specific terms in their abstracts.
+- 🔍 **Keyword search** - Search by topic/abstract
+- 📖 **Citation search** - Find papers citing a work
+- 📑 **Reference search** - Get a paper's bibliography  
+- 👤 **Author search** - All works by a researcher
+- 🏛️ **Institution search** - Papers from a university
+- ⚡ **Smart filtering** - Combine any filters together
+- 🔄 **Deduplication** - Merge results from both databases
 
-**What it does**:
-- Searches OpenAlex database for papers containing the specified query term
-- Filters papers published from a specified start date (defaults to 2023/12/01)
-- Retrieves abstracts, titles, publication dates, and URLs
+## Usage
 
-**Output**: Creates a CSV file (`openalex_commodity_papers.csv` by default) with columns:
-- `title`: Paper title
-- `abstract`: Full abstract text
-- `publication_date`: Publication date
-- `url`: Link to the paper (if available)
+Run interactively:
+```bash
+python paper_search.py
+```
 
+### Search Types
 
-### 2. `openalex_search_by_papers_that_cite_a_paper.py`
-**Purpose**: Finds all papers that cite a specific research paper.
+| Starting Point | Description |
+|----------------|-------------|
+| Keyword search | Search all papers by topic/abstract |
+| Citation search | Papers that cite a specific work |
+| Reference search | Bibliography of a specific work |
+| Author search | All works by a researcher |
+| Institution search | Papers from a university |
 
-**What it does**:
-- Takes either a paper title/DOI or direct OpenAlex ID as input
-- Searches for all papers that cite the specified paper
-- Retrieves abstracts, titles, publication dates, and URLs of citing papers
-- Interactive script that prompts for input
+### Filters (All Optional)
 
-**Output**: Creates a CSV file named `openalex_citations_of_[paper_name].csv` with columns:
-- `title`: Paper title (the citing paper)
-- `abstract`: Full abstract text
-- `publication_date`: Publication date
-- `url`: Link to the paper (if available)
+| Filter | Description |
+|--------|-------------|
+| Keywords | Topic/abstract search (always available) |
+| Year range | e.g., `2020-2024` or `2020` |
+| Institution | Filter by author affiliation |
+| Source | Filter by journal/venue |
+| Author | Filter by specific researcher |
+| Min citations | e.g., `50` for highly-cited only |
+| Open access | OA papers only |
 
-The script will prompt you to either:
-- Search by paper title or DOI or
-- Enter an OpenAlex ID directly (e.g., W2288114807) - which you can find by going to this link in OpenAlex [https://openalex.org/](https://openalex.org/) and searching for the paper. Example: we search for the paper "What do we learn from the price of crude oil futures?" click on it and in the search bar the link appears as https://openalex.org/works?page=1&filter=ids.openalex:w2139116473&sort=cited_by_count:desc&zoom=w2139116473 -> the OpenAlex ID is w2139116473 (right after "ids.openalex:")
+### Example Searches
 
-## Configuration Options
+**Find highly-cited ML papers from MIT:**
+1. Choose "Keyword search"
+2. Keywords: `machine learning`
+3. Year range: `2020-2024`
+4. Add filter: Institution → `MIT`
+5. Add filter: Minimum citations → `100`
 
-Both scripts support customization:
-- **Maximum results**: Default 1000 papers (configurable via `max_results` parameter)
-- **Date filtering**: Search from specific publication dates
-- **API rate limiting**: Built-in delays to respect OpenAlex API limits
+**Get bibliography of a seminal paper:**
+1. Choose "References of a specific work"
+2. Enter DOI: `10.1093/rfs/hhr093`
 
-## Sample Output Files
+**Find all papers citing a work:**
+1. Choose "Papers citing a specific work"
+2. Enter title, DOI, or OpenAlex ID
 
-The repository includes example output files:
-- `openalex_commodity_papers.csv`: Results from searching "commodity financialization"
-- `openalex_citations_of_Financialization_of_commodity_markets_ten_years_later.csv`: Papers citing a specific financialization study
-- `openalex_citations_of_W2107802909.csv`: Papers citing work with OpenAlex ID W2107802909 (Index Investment and the Financialization of Commodities by Tang and Xiong)
+## WoS API Key (Optional)
 
+Get from [Clarivate Developer Portal](https://developer.clarivate.com/apis/wos-starter), add to `.env`:
+
+```
+WOS_API_KEY=your_key_here
+```
+
+Without it, only OpenAlex is used (still 240M+ papers).
+
+## Output
+
+Results saved to `outputs/{search_name}_{timestamp}/` as CSV:
+- Title, abstract, publication date
+- URL, DOI, citation count
+- Source (openalex/wos/both)
+
+## Project Structure
+
+```
+├── paper_search.py    # Main CLI tool
+├── outputs/           # Search results (CSV)
+├── docs/              # API documentation
+├── legacy/            # Old separate scripts
+├── .env               # WoS API key
+└── .env.example
+```

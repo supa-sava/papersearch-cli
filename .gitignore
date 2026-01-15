@@ -1,10 +1,11 @@
-# Environment files
+# Environment
 .env
-
-# IDE files
-.vscode/
-.idea/
-
-# Python virtual environments
 venv/
-.env/
+__pycache__/
+
+# Outputs (optional - remove this line if you want to track results)
+outputs/
+
+# Legacy scripts
+legacy/
+tests/

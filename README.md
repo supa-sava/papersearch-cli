@@ -2,6 +2,12 @@
 
 A beautiful CLI tool for searching academic papers across **OpenAlex** and **Web of Science**.
 
+## Coverage
+This tool searches across two complementary scholarly indexes: OpenAlex (open, very broad coverage) and Web of Science Core Collection (curated, selective coverage).​
+* Web of Science (WoS): The full Web of Science platform includes more than 271 million records, and the WoS Core Collection “connects more than 97 million records” via cited references and indexes 22,000+ journals “cover to cover.”​
+* OpenAlex: OpenAlex reports indexing “over 240M works” (journal articles, books, datasets, theses, etc.), and external reviews describe OpenAlex as having 260M+ works (late 2024) and ingesting large repository-oriented sources like DataCite.​
+Because their inclusion policies differ, overlap is substantial but not complete—using both typically returns a broader and more reliable result set than using either alone.
+
 ## Quick Start
 
 ```bash
